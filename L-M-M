@@ -1,0 +1,56 @@
+%intensidad de la corriente
+corriente = 2.5;  % en unidad de Voltaje (V)
+% Parámetros del cilindro 1
+radius1 = 0.25;
+height1 = 50;
+% Crear el cilindro 1
+[cx1, cy1, cz1] = cylinder(radius1, 100);
+cz1 = cz1 * height1;
+% Parámetros del cilindro 2
+radius2 = 0.25;
+height2 = 50;
+% Crear el cilindro 2
+[cx2, cy2, cz2] = cylinder(radius2, 100);
+cz2 = cz2 * height2;
+% Visualizar cilindro 1
+figure;
+surf(cx1, cy1, cz1, 'FaceColor', '[0.8, 0.5, 0.2]', 'EdgeColor', 'none', 'FaceAlpha', 0.5);
+hold on;
+% Visualizar cilindro 2
+surf(cx2 + 10, cy2, cz2, 'FaceColor', '[0.8, 0.5, 0.4]', 'EdgeColor', 'none', 'FaceAlpha', 0.5); % Ajuste en x para separar los cilindros
+% Parámetros de la espiral
+numPoints = 50;
+theta = linspace(0, 2*pi, numPoints);
+r_spiral = corriente;
+% Coordenadas de la espiral
+x_spiral = r_spiral * cos(theta);
+y_spiral = r_spiral * sin(theta);
+z_spiral = linspace(0, height1, numPoints);
+% Visualizar la espiral
+plot3(x_spiral, y_spiral, z_spiral, 'r', 'LineWidth', 2);
+% Ley de Ampère para el cilindro 1
+current1 = 2.5;
+B1 = (mu0 * current1) / (2 * pi * r_spiral);
+Bx1 = B1 * cos(theta);
+By1 = B1 * sin(theta);
+Bz1 = zeros(size(theta));
+% Ley de Ampère para el cilindro 2
+current2 = 2.5;
+mu0 = 4*pi*10^-7; % Permeabilidad magnética del vacío
+B2 = (mu0 * current2) / (2 * pi * radius2);
+Bx2 = B2 * cos(theta);
+By2 = B2 * sin(theta);
+Bz2 = zeros(size(theta));
+% Visualizar campos magnéticos para el cilindro 1
+quiver3(x_spiral, y_spiral, z_spiral, Bx1, By1, Bz1, 'g');
+% Visualizar campos magnéticos para el cilindro 2
+quiver3(x_spiral + 10, y_spiral, z_spiral, Bx2, By2, Bz2, 'r'); % Ajuste en x para separar los campos magnéticos
+% Configuración de la visualización
+title('Cilindros y Campos Magnéticos');
+xlabel('X');
+ylabel('Y');
+zlabel('Z');
+axis equal;
+grid on;
+view(3);
+legend('Cilindro 1', 'Cilindro 2', 'Espiral', 'Campo Magnético 1', 'Campo Magnético 2');
